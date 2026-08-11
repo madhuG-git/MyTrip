@@ -1,0 +1,61 @@
+
+<% layout("./layouts/boilerplate") %>
+
+<div class="container">
+    <div class="row justify-content-center">
+
+        <div class="col-md-6 mt-3">
+
+            <h3><%= data.title %></h3>
+
+            <div class="card show-card">
+
+                <img src="<%= data.image %>"
+                     class="card-img-top"
+                     alt="img">
+
+                <div class="card-body">
+
+                    <p class="card-text">
+                        <b><%= data.title %></b>
+                        <br>
+
+                        <%= data.description %>
+                        <br>
+
+                        &#8377; <%= data.price.toLocaleString("en-IN") %>
+                        <br>
+
+                        <%= data.location %>
+                        <br>
+
+                        <%= data.country %>
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="btns mt-3 mb-3">
+
+                <a href="/listings/<%= data.id %>/edit"
+                   class="btn btn-outline-dark me-3">
+                    Edit
+                </a>
+
+                <form method="post"
+                      action="/listings/<%= data.id %>?_method=DELETE"
+                      class="d-inline">
+
+                    <button class="btn btn-danger ms-2">
+                        Delete
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
