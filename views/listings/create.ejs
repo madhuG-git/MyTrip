@@ -4,14 +4,26 @@
         <div class="col-8 offset-2">
             <br>
     <h3>Create New Listing..</h3>
-    <form method="post" action="/listings">
+    <form method="post" action="/listings" novalidate class="needs-validation">
         <div class="mb-3">
         <label for="title" class="form-label">Title</label>
-        <input type="text" placeholder="enter title" name="title" id="title" class="form-control">
+        <input type="text" placeholder="enter title" name="title" id="title" class="form-control" required>
+         <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+             Please enter a valid title.
+        </div>
         </div>
         <div class="mb-3">
         <label for="description" class="form-label">Description</label>
-        <textarea type="text" placeholder="description" name="description" id="description"  class="form-control"></textarea>
+        <textarea type="text" placeholder="description" name="description" id="description"  class="form-control" required></textarea>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+         <div class="invalid-feedback">
+            Please enter a short description.
+        </div>
         </div>
         <div class="mb-3">
         <label for="image" class="form-label">Image</label>
@@ -19,15 +31,33 @@
         </div>
         <div class="mb-3">
         <label for="price" class="form-label">Price</label>
-        <input type="number" placeholder="enter price" name="price" id="price"  class="form-control">
+        <input type="number" placeholder="enter price" name="price" id="price"  class="form-control" min="1" required>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+         <div class="invalid-feedback">
+            Please enter a valid price.
+        </div>
         </div>
         <div class="mb-3">
         <label for="location" class="form-label">location</label>
-        <input type="text" placeholder="enter location" name="location" id="location"  class="form-control">
+        <input type="text" placeholder="enter location" name="location" id="location"  class="form-control" required>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+         <div class="invalid-feedback">
+            Please enter a valid location.
+        </div>
         </div>
         <div class="mb-3">
         <label for="country" class="form-label">country</label>
-        <input type="text" placeholder="enter country" name="country" id="country"  class="form-control">
+        <input type="text" placeholder="enter country" name="country" id="country"  class="form-control" required>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+         <div class="invalid-feedback">
+            Please enter a valid country name.
+        </div>
         </div>
         <div>
         <button class="btn btn-outline-dark mb-4" >submit</button>
@@ -35,4 +65,28 @@
     </form>
     </div>
     </div>
+
+
+    <script>
+
+        (() => {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+            }, false)
+        })
+        })()
+
+    </script>
 
