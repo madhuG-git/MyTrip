@@ -4,6 +4,8 @@ const mongoose = require("mongoose")
 const path = require("path")
 const methodoverride = require("method-override")
 const ejsmate = require("ejs-mate")
+const wrapAsync = require("./utils/wrapAsync")
+const ExpressError = require("./utils/expresserr")
 
 app.listen(8080,()=> {
     console.log("Server is listening on port 8080")
@@ -32,43 +34,59 @@ app.get("/",(req,res)=> {
     res.send("root-page")
 })
 
-app.get("/listings",async (req,res)=> {
+app.get("/listings",wrapAsync( async (req,res)=> {
     const data = await listing.find()
     res.render("listings/home",{data})
-})
+}))
 
 app.get("/listings/new",(req,res)=> {
     res.render("listings/create")
 })
 
-app.get("/listings/:id",async (req,res)=> {
+app.get("/listings/:id",wrapAsync(  async (req,res)=> {
     const {id} = req.params;
     const data = await listing.findById(id)
     res.render("listings/show",{data})
-})
+}))
 
-app.post("/listings",async (req,res)=> {
+app.post("/listings",wrapAsync(  async (req,res)=> {
     const {title,description,image,price,location,country} = req.body;
+    if(!title || !description  || !price || !location || !country) {
+        throw new ExpressError(400,"send valid data for listing")
+    }
     await listing.insertOne({title:title,description:description,image:image,price:price,location:location,country:country})
     res.redirect("/listings")
-})
+}))
 
-app.get("/listings/:id/edit",async (req,res)=> {
+app.get("/listings/:id/edit", wrapAsync( async (req,res)=> {
     const {id} = req.params;
     const data = await listing.findById(id)
     res.render("listings/edit" ,{data})
-})
+}))
 
-app.put("/listings/:id",async (req,res)=> {
+app.put("/listings/:id",wrapAsync( async (req,res)=> {
     const {id} = req.params;
     const {title,description,image,price,location,country} = req.body;
+     if(!title || !description   || !price || !location || !country) {
+        throw new ExpressError(400,"send valid data for listing")
+    }
     await listing.findByIdAndUpdate(id,{title:title,description:description,image:image,price:price,location:location,country:country})
     res.redirect(`/listings/${id}`)
 
-})
+}))
 
-app.delete("/listings/:id",async (req,res) => {
+app.delete("/listings/:id",wrapAsync( async (req,res) => {
     const {id} = req.params
     await listing.findByIdAndDelete(id)
     res.redirect("/listings")
+}))
+
+
+app.use((req,res,next)=> {
+    throw new ExpressError(404,"Page Not Found")
+})
+
+app.use((err,req,res,next)=> {
+    let {status = 500,message = "Something Went Worng"} = err
+    res.status(status).render("listings/err",{message})
 })
