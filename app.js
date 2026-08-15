@@ -5,7 +5,7 @@ const path = require("path")
 const methodoverride = require("method-override")
 const ejsmate = require("ejs-mate")
 const wrapAsync = require("./utils/wrapAsync")
-const ExpressError = require("./utils/expresserr")
+const ExpressError = require("./utils/ExpressError")
 
 app.listen(8080,()=> {
     console.log("Server is listening on port 8080")
