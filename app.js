@@ -7,6 +7,7 @@ const ejsmate = require("ejs-mate")
 const wrapAsync = require("./utils/wrapAsync")
 const ExpressError = require("./utils/ExpressError")
 
+
 app.listen(8080,()=> {
     console.log("Server is listening on port 8080")
 })
@@ -21,6 +22,7 @@ connectdb().then(()=> {
 })
 
 const listing = require("./models/listingsch")
+const review = require("./models/reviews")
 app.set("view engine","ejs")
 app.use(express.urlencoded({ extended: true }));
 app.set("views", path.join(__dirname, "views"));
@@ -45,7 +47,7 @@ app.get("/listings/new",(req,res)=> {
 
 app.get("/listings/:id",wrapAsync(  async (req,res)=> {
     const {id} = req.params;
-    const data = await listing.findById(id)
+    const data = await listing.findById(id).populate("reviews")
     res.render("listings/show",{data})
 }))
 
@@ -81,6 +83,25 @@ app.delete("/listings/:id",wrapAsync( async (req,res) => {
     res.redirect("/listings")
 }))
 
+//review route
+
+app.post("/listings/:id/review",wrapAsync(async(req,res)=> {
+    const {id} = req.params;
+    const place = await listing.findById(id)
+    let {rating,comment} = req.body
+    const newreview = new review({rating : rating,comment : comment})
+    await newreview.save()
+    place.reviews.push(newreview)
+    await place.save()
+    res.redirect(`/listings/${id}`)
+}))
+
+app.delete("/listings/:id/review/:reviewid",wrapAsync(async(req,res)=> {
+    let {id,reviewid} = req.params
+    await listing.findByIdAndUpdate(id,{$pull: {reviews : reviewid}})
+    await review.findByIdAndDelete(reviewid)
+    res.redirect(`/listings/${id}`)
+}))
 
 app.use((req,res,next)=> {
     throw new ExpressError(404,"Page Not Found")
