@@ -4,11 +4,11 @@
 <div class="container">
     <div class="row justify-content-center">
 
-        <div class="col-md-6 mt-3">
+        <div class="col-md-6  mt-3">
 
             <h3><%= data.title %></h3>
 
-            <div class="card show-card">
+            <div class="card show-card listing-card">
 
                 <img src="<%= data.image %>"
                      class="card-img-top"
@@ -55,7 +55,50 @@
 
             </div>
 
+            <div class="mb-3">
+                <hr>
+                <h3>Leave a review :</h3>
+                <form method="post" action="/listings/<%=data._id%>/review">
+                    <div>
+                        <label class="form-label" for="rate">Rate</label>
+                        <input type="range" min="1" max="5" name="rating" id="rate" class="form-range">
+                    </div>
+                    <div>
+                        <label class="form-label" for="comment">Comment</label>
+                        <textarea name="comment" class="form-control" id="comment" required></textarea>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-dark mt-3">submit</button>
+                    </div>
+                </form>
+            </div>
+            <hr>
+            <div class="row g-3 mt-2 mb-3">
+                <% for(let review of data.reviews) { %>
+
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body p-3">
+                                <h5 class="card-title">
+                                    Smriti
+                                </h5>
+                                <p class="card-text"><%= review.comment %></p>
+                                <p class="card-text">
+                                    <%= review.rating %> stars
+                                </p>
+                                <form method="post" action="/listings/<%=data._id%>/review/<%=review._id%>?_method=delete">
+                                    <button class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                <% } %>
+            </div>
+                        
         </div>
 
     </div>
 </div>
+
+
