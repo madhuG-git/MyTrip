@@ -4,9 +4,9 @@
     <div class="row  row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
     
     <% for(let info of data) { %>
-    <a href="/listings/<%=info._id%>" class="card-show">
+    <a href="/listings/<%=info._id%>" class="card-show ">
     <div class="col">
-    <div class="card h-100" >
+    <div class="card h-100 listing-card">
     <img src="<%= info.image %>" class="card-img-top" alt="img">
     <div class="card-img-overlay"></div>
     <div class="card-body">
